@@ -44,7 +44,7 @@
             "type": "Microsoft.DataShare/accounts",
             "apiVersion": "2019-11-01",
             "name": "[variables('dataShareAccountName')]",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "identity": {
                 "type": "SystemAssigned"
             },
@@ -54,7 +54,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2018-09-01-preview",
-            "name": "[concat(variables('dataShareAccountName'), '/Microsoft.Authorization/', guid(uniqueString(variables('dataShareAccountName'))))]",
+            "name": "[concat(variables('storageAccountName'), '/Microsoft.Authorization/', guid(uniqueString(variables('storageAccountName'))))]",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
                 "[resourceId('Microsoft.DataShare/accounts', variables('dataShareAccountName'))]"
