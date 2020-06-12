@@ -26,7 +26,6 @@
         "storageAccountName": "[substring(concat(parameters('storageAccountNamePrefix'), uniqueString('storage')), 0, 30)]",
         "dataShareAccountName": "[substring(concat(parameters('storageAccountNamePrefix'), uniqueString('dsaccount')), 0, 30)]",
         "Owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]"
-
     },
     "resources": [
         {
@@ -42,6 +41,17 @@
             }
         },
         {
+            "type": "Microsoft.DataShare/accounts",
+            "apiVersion": "2019-11-01",
+            "name": "[variables('dataShareAccountName')]",
+            "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+            }
+        },
+        {
             "type": "Microsoft.Storage/storageAccounts/providers/roleAssignments",
             "apiVersion": "2018-09-01-preview",
             "name": "[concat(variables('dataShareAccountName'), '/Microsoft.Authorization/', guid(uniqueString(variables('dataShareAccountName'))))]",
@@ -53,47 +63,6 @@
                 "roleDefinitionId": "[variables('Owner')]",
                 "principalId": "[reference(concat('Microsoft.DataShare/accounts/', variables('dataShareAccountName')), '2019-11-01', 'Full').identity.principalId]",
                 "principalType": "ServicePrincipal"
-            }
-        },
-        {
-            "type": "Microsoft.DataShare/accounts/shareSubscriptions",
-            "apiVersion": "2019-11-01",
-            "name": "[concat(variables('dataShareAccountName'), '/datashare')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DataShare/accounts', variables('dataShareAccountName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
-            ],
-            "properties": {
-                "invitationId": "[parameters('InvitationID')]",
-                "sourceShareLocation": "[resourceGroup().location]"
-            }
-        },
-        {
-            "type": "Microsoft.DataShare/accounts/shareSubscriptions/dataSetMappings",
-            "apiVersion": "2019-11-01",
-            "name": "[concat(variables('dataShareAccountName'), '/datashare/dataset1')]",
-            "kind": "BlobFolder",
-            "properties": {
-                "containerName": "incoming",
-                "prefix": "container1",
-                "subscriptionId": "[subscription().subscriptionId]",
-                "resourceGroup": "[resourceGroup().name]",
-                "storageAccountName": "[variables('storageAccountName')]",
-                "dataSetId": "21d38b1a-dfaf-49c8-9a53-be0e1104d901"
-            }
-        },
-        {
-            "type": "Microsoft.DataShare/accounts/shareSubscriptions/dataSetMappings",
-            "apiVersion": "2019-11-01",
-            "name": "[concat(variables('dataShareAccountName'), '/datashare/dataset2')]",
-            "kind": "BlobFolder",
-            "properties": {
-                "containerName": "incoming",
-                "prefix": "container2",
-                "subscriptionId": "[subscription().subscriptionId]",
-                "resourceGroup": "[resourceGroup().name]",
-                "storageAccountName": "[variables('storageAccountName')]",
-                "dataSetId": "4b20f08b-2f47-47c3-a332-fc864028585e"
             }
         }
     ],
