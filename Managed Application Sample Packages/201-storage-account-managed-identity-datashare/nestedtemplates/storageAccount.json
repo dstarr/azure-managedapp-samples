@@ -23,8 +23,8 @@
         }
     },
     "variables": {
-        "storageAccountName": "[substring(concat(parameters('storageAccountNamePrefix'), uniqueString('storage')), 0, 20)]",
-        "dataShareAccountName": "[substring(concat(parameters('storageAccountNamePrefix'), uniqueString('dsaccount')), 0, 20)]",
+        "storageAccountName": "[substring(concat(parameters('storageAccountNamePrefix'), uniqueString('storage')), 0, 15)]",
+        "dataShareAccountName": "[substring(concat(parameters('storageAccountNamePrefix'), uniqueString('dsaccount')), 0, 15)]",
         "Owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]"
     },
     "resources": [
